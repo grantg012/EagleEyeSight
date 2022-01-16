@@ -1,0 +1,11 @@
+# Python
+*.pyc
+**/__pycache__/*
+
+# Eagle
+/eagle-files/*
+!/eagle-files/.gitkeep
+
+# Editors
+.idea/*
+.vscode/*
