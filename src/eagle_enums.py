@@ -13,6 +13,7 @@ class EnumIntHash(Enum):
 class Warnings(EnumIntHash):
     """"""
     CORRECTION = auto()
+    HIGH_PRIORITY_MESSAGE = auto()
     ERROR = auto()
     WARNING = auto()
     SUGGESTION = auto()
