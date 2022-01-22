@@ -51,7 +51,8 @@ def check_polgyons(brdTree: ET, boardType: BoardTypes, correct: bool) -> list[tu
             for (poly, _) in isolate_fails:
                 poly.attrib["isolate"] = isolateMinStr
 
-    return warnings
+    return warnings or [(Warnings.HIGH_PRIORITY_MESSAGE,
+        f"All polygons have sufficient widths ({widthMinThou} thou) and isolates ({isolateMinThou} thou).")]
 
 
 def main(args: list[str]):

@@ -2,6 +2,7 @@
 """
 
 from __future__ import annotations
+from itertools import chain
 import sys
 from typing import Final
 
@@ -25,8 +26,34 @@ def level_int_to_voltage_names(level: int) -> set[str]:
     return {f"{level}V", f"+{level}V", f"{level}v", f"+{level}v"}
 
 
-def _check_signal_name(warnings: list[tuple[Warnings, str]], voltages: list, net_names: list[str], net_nodes: list[ET], correct: bool) -> None:
+def remove_middle_node(parent: ET, target_node: ET) -> list[ET]:
     """"""
+    children = target_node.findall("./*")
+    for c in children:
+        target_node.remove(c)
+    parent.remove(target_node)
+    return children
+
+
+def transfer_nets(nodes: list[ET], correct_name: str, voltage_names: set[str], parent: ET):
+    """"""
+    correct_node = None
+    children = []
+    for node in nodes:
+        if (name := node.attrib["name"]) == correct_name:
+            correct_node = node
+        elif name in voltage_names:
+            children.append(remove_middle_node(parent, node))
+    assert correct_node is not None
+    assert children
+    for childrenList in children:
+        correct_node.extend(childrenList)
+
+
+def _check_signal_name(warnings: list[tuple[Warnings, str]], voltages: list, net_names: list[str],
+                       net_nodes: list[ET], nets_node: ET, brdTree: ET, correct: bool) -> None:
+    """"""
+    signals_node = signal_nodes = None
     for voltage in voltages:
         voltage_names = level_dec_to_voltage_names(voltage)
         found_names = [n for n in net_names if n in voltage_names]
@@ -35,10 +62,12 @@ def _check_signal_name(warnings: list[tuple[Warnings, str]], voltages: list, net
                 f"Voltage net for {voltage}V has multiple names ({found_names})."
             ))
             if correct:
-                correct_name = next(iter(set(voltage_names)))
-                for node in net_nodes:
-                    if (name := node.attrib["name"]) in voltage_names and name != correct_name:
-                        node.attrib["name"] = correct_name
+                if not signals_node:
+                    signals_node = brdTree.find("./drawing/board/signals")
+                    signal_nodes = signals_node.findall("signal")
+                correct_name = next(iter(voltage_names))
+                transfer_nets(net_nodes, correct_name, voltage_names, nets_node)
+                transfer_nets(signal_nodes, correct_name, voltage_names, signals_node)
 
 
 def check_signal_names(schTree: ET, brdTree: ET, correct: bool) -> list[tuple[Warnings, str]]:
@@ -51,8 +80,8 @@ def check_signal_names(schTree: ET, brdTree: ET, correct: bool) -> list[tuple[Wa
 
     # Check the voltages with and without a decimal
     warnings = []
-    _check_signal_name(warnings, POWER_VOLTAGES_INTEGER, net_names, net_nodes, correct)
-    _check_signal_name(warnings, POWER_VOLTAGES_DECIMAL, net_names, net_nodes, correct)
+    _check_signal_name(warnings, POWER_VOLTAGES_INTEGER, net_names, net_nodes, nets_node, brdTree, correct)
+    _check_signal_name(warnings, POWER_VOLTAGES_DECIMAL, net_names, net_nodes, nets_node, brdTree, correct)
 
     return warnings or [(Warnings.HIGH_PRIORITY_MESSAGE, "All voltage names appear consistent without duplicates.")]
 
@@ -60,9 +89,14 @@ def check_signal_names(schTree: ET, brdTree: ET, correct: bool) -> list[tuple[Wa
 def main(args: list[str]):
     """Just for testing"""
     args.append("../eagle-files/CAN-Test-Board")
-    schTree = ET.parse(args[0] + ".sch")
-    brdTree = ET.parse(args[0] + ".brd")
-    print_results(check_signal_names(schTree, brdTree, True), Warnings.highest())
+    names = (args[0] + ".sch", (args[0] + ".brd"))
+    schTree = ET.parse(names[0])
+    brdTree = ET.parse(names[1])
+    correct = True
+    print_results(check_signal_names(schTree, brdTree, correct), Warnings.highest())
+    if correct:
+        schTree.write("../eagle-files/test.sch")
+        brdTree.write("../eagle-files/test.brd")
 
 
 if(__name__ == "__main__"):
