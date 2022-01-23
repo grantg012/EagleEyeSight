@@ -2,7 +2,6 @@
 """
 
 from __future__ import annotations
-from itertools import chain
 import sys
 from typing import Final
 
@@ -68,6 +67,7 @@ def _check_signal_name(warnings: list[tuple[Warnings, str]], voltages: list, net
                 correct_name = next(iter(voltage_names))
                 transfer_nets(net_nodes, correct_name, voltage_names, nets_node)
                 transfer_nets(signal_nodes, correct_name, voltage_names, signals_node)
+                # TODO: append to message that the correction happened
 
 
 def check_signal_names(schTree: ET, brdTree: ET, correct: bool) -> list[tuple[Warnings, str]]:

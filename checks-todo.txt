@@ -1,0 +1,12 @@
+Check pin ordering?
+Stop property or stop polygon
+Minimum trace widths
+Labels near connectors?
+Inductors and polygons
+Good library practices
+    Caps have polarity
+    Prefixes
+    name, outline, keepout, etc
+Polygons not on top of each other or outline
+Correct layers on/off
+missing frame, frame not 0 aligned
