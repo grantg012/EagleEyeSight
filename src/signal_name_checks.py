@@ -62,8 +62,7 @@ def _check_signal_name(warnings: list[tuple[Warnings, str]], voltages: list, net
             ))
             if correct:
                 if not signals_node:
-                    signals_node = brdTree.find("./drawing/board/signals")
-                    signal_nodes = signals_node.findall("signal")
+                    signal_nodes = brdTree.find("./drawing/board/signals").findall("signal")
                 correct_name = next(iter(voltage_names))
                 transfer_nets(net_nodes, correct_name, voltage_names, nets_node)
                 transfer_nets(signal_nodes, correct_name, voltage_names, signals_node)
@@ -93,7 +92,7 @@ def main(args: list[str]):
     schTree = ET.parse(names[0])
     brdTree = ET.parse(names[1])
     correct = True
-    print_results(check_signal_names(schTree, brdTree, correct), Warnings.highest())
+    print_results(check_signal_names(schTree, brdTree, correct), Warnings.all())
     if correct:
         schTree.write("../eagle-files/test.sch")
         brdTree.write("../eagle-files/test.brd")

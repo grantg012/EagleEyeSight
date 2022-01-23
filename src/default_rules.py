@@ -13,13 +13,16 @@ RULES: Final = {
     BoardTypes.POWER: {
         Checks.POLYGON_WIDTH: thou_to_mm(30),
         Checks.POLYGON_ISOLATE: thou_to_mm(30),
+        Checks.TRACE_THICKNESS: thou_to_mm(10),
     },
     BoardTypes.MIXED: {
         Checks.POLYGON_WIDTH: thou_to_mm(30),
         Checks.POLYGON_ISOLATE: thou_to_mm(30),
+        Checks.TRACE_THICKNESS: thou_to_mm(10),
     },
     BoardTypes.LOGIC: {
         Checks.POLYGON_WIDTH: thou_to_mm(16),
         Checks.POLYGON_ISOLATE: thou_to_mm(16),
+        Checks.TRACE_THICKNESS: thou_to_mm(8),
     }
 }

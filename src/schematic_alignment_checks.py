@@ -29,7 +29,7 @@ def almost_eq_coords(x1: float, y1: float, x2: float, y2: float) -> bool:
 def check_schematic_alignment(schTree: ET, correct: bool) -> list[tuple[Warnings, str]]:
     """"""
     warnings = []
-    # First check what the grid is configured to.
+    # First, check what the grid is configured to.
     gridNode = schTree.find(".//grid")
     gridSize = float(gridNode.attrib["distance"])
     goodGrid = (math.isclose(gridSize, GRID_BASE) or is_grid_multiple(gridSize)) and \
@@ -40,8 +40,8 @@ def check_schematic_alignment(schTree: ET, correct: bool) -> list[tuple[Warnings
             gridNode.attrib["distance"] = str(GRID_BASE)
             gridNode.attrib["unitdist"] = gridNode.attrib["unit"] = "inch"
 
-    # Second check all the symbols in the schematic
-    instance_nodes = schTree.find(".//instances").findall("instance")
+    # Second, check all the symbols in the schematic
+    instance_nodes = schTree.findall(".//instances/instance")
     segment_nodes = libraries_node = parts_node = None
     for inst in instance_nodes:
         x = mm_to_in(x_mm := float(inst.attrib['x']))
@@ -59,7 +59,7 @@ def check_schematic_alignment(schTree: ET, correct: bool) -> list[tuple[Warnings
                 # Move all the net segments it's connected to
                 # First get the nodes we need if we haven't already
                 if not segment_nodes:
-                    segment_nodes = schTree.find(".//nets").findall(".//segment")
+                    segment_nodes = schTree.findall(".//nets//segment")
                     libraries_node = schTree.find(".//libraries")
                     parts_node = schTree.find(".//parts")
                 # Next find the symbol that was used and the coordinates of its pins
@@ -95,7 +95,7 @@ def main(args: list[str]):
     schTree = ET.parse(names[0])
     brdTree = ET.parse(names[1])
     correct = False
-    print_results(check_schematic_alignment(schTree, correct), Warnings.highest())
+    print_results(check_schematic_alignment(schTree, correct), Warnings.all())
     if correct:
         schTree.write("../eagle-files/test.sch")
         brdTree.write("../eagle-files/test.brd")

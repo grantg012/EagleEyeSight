@@ -1,6 +1,6 @@
 Check pin ordering?
 Stop property or stop polygon
-Minimum trace widths
+-Minimum trace widths
 Labels near connectors?
 Inductors and polygons
 Good library practices

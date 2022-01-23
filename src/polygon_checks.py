@@ -15,9 +15,7 @@ from results_printer import print_results
 def check_polgyons(brdTree: ET, boardType: BoardTypes, correct: bool) -> list[tuple[Warnings, str]]:
     """"""
     # Get all the polygons
-    # signals_node = next(brdTree.iter("signals"))  # Old version. Keep if compatibility breaks, but it's slower
-    signals_node = brdTree.find("./drawing/board/signals")
-    signal_nodes = signals_node.findall("signal")
+    signal_nodes = brdTree.find("./drawing/board/signals").findall("signal")
     polygons = {node.attrib["name"]: node.findall("polygon") for node in signal_nodes}
 
     # Check their widths and isolates
@@ -59,7 +57,7 @@ def main(args: list[str]):
     """Just for testing"""
     args.append("../eagle-files/CAN-Test-Board")
     brdTree = ET.parse(args[0] + ".brd")
-    print_results(check_polgyons(brdTree, BoardTypes.POWER, False), Warnings.highest())
+    print_results(check_polgyons(brdTree, BoardTypes.POWER, False), Warnings.all())
 
 
 if(__name__ == "__main__"):

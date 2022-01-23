@@ -26,7 +26,8 @@ class Warnings(EnumIntHash):
             raise TypeError(f"Can't compare Warnings and {type(other)}.")
 
     @classmethod
-    def highest(cls):
+    def all(cls):
+        """Return the enum member that results in the most (all) messages being printed."""
         return Warnings.MESSAGE
 
 
@@ -43,3 +44,4 @@ class Checks(EnumIntHash):
     """"""
     POLYGON_WIDTH = auto()
     POLYGON_ISOLATE = auto()
+    TRACE_THICKNESS = auto()
