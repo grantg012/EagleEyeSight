@@ -27,7 +27,7 @@ def check_trace_widths(brdTree: ET, schTree: ET, boardType: BoardTypes, correct:
         class_width = float(c.attrib["width"])
         if class_width < minThick:
             warnings.append((Warnings.ERROR,
-                f"Net class {c.attrib['name']} has a trace width of {mm_to_thou(class_width)} thou which is too this for a {boardName} ({minThickThou} thou)."
+                f"Net class {c.attrib['name']} has a trace width of {mm_to_thou(class_width)} thou which is too thin for a {boardName} ({minThickThou} thou)."
             ))
             if correct:
                 if not schClasses:
@@ -62,7 +62,7 @@ def main(args: list[str]):
     schTree = ET.parse(names[0])
     brdTree = ET.parse(names[1])
     correct = True
-    print_results(check_trace_widths(brdTree, schTree, BoardTypes.POWER, correct), Warnings.all())
+    print_results(check_trace_widths(brdTree, schTree, BoardTypes.LOGIC, correct), Warnings.all())
     if correct:
         # schTree.write("../eagle-files/test.sch", xml_declaration = True, encoding = "utf-8")
         # brdTree.write("../eagle-files/test.brd", xml_declaration = True, encoding = "utf-8")

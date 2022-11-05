@@ -62,8 +62,9 @@ def _check_signal_name(warnings: list[tuple[Warnings, str]], voltages: list, net
             ))
             if correct:
                 if not signals_node:
-                    signal_nodes = brdTree.find("./drawing/board/signals").findall("signal")
-                correct_name = next(iter(voltage_names))
+                    signals_node = brdTree.find("./drawing/board/signals")
+                    signal_nodes = signals_node.findall("signal")
+                correct_name = found_names[0]
                 transfer_nets(net_nodes, correct_name, voltage_names, nets_node)
                 transfer_nets(signal_nodes, correct_name, voltage_names, signals_node)
                 # TODO: append to message that the correction happened
@@ -94,8 +95,13 @@ def main(args: list[str]):
     correct = True
     print_results(check_signal_names(schTree, brdTree, correct), Warnings.all())
     if correct:
-        schTree.write("../eagle-files/test.sch")
-        brdTree.write("../eagle-files/test.brd")
+        with open("../eagle-files/test.sch", 'wb') as schFile:
+            schFile.write('<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE eagle SYSTEM "eagle.dtd">\n'.encode('utf8'))
+            schTree.write(schFile, "utf-8")
+        with open("../eagle-files/test.brd", 'wb') as brdFile:
+            brdFile.write('<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE eagle SYSTEM "eagle.dtd">\n'.encode('utf8'))
+            brdTree.write(brdFile, "utf-8")
+        # brdTree.write("../eagle-files/test.brd", encoding = "UTF-8", xml_declaration = True)
 
 
 if(__name__ == "__main__"):

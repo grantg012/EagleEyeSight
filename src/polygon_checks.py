@@ -29,7 +29,7 @@ def check_polgyons(brdTree: ET, boardType: BoardTypes, correct: bool) -> list[tu
         width_fails = [(poly, w) for poly in polys if (w := float(poly.attrib["width"])) < widthMin]
         warnings.extend((
             Warnings.ERROR,
-            f"Polygon {signal} (l{poly.attrib['layer']}) width is {mm_to_thou(w)} which is too small"
+            f"Polygon {signal} (l{poly.attrib['layer']}) width is {mm_to_thou(w)} which is too small "
             f"for {boardType.name.title()} width ({widthMinThou} thou)."
             ) for (poly, w) in width_fails)
         if correct:
@@ -41,7 +41,7 @@ def check_polgyons(brdTree: ET, boardType: BoardTypes, correct: bool) -> list[tu
         isolate_fails = [(poly, i) for poly in polys if (i := float(poly.attrib["isolate"])) < isolateMin]
         warnings.extend((
             Warnings.ERROR,
-            f"Polygon {signal} (l{poly.attrib['layer']}) isolate is {mm_to_thou(i)} which is too small"
+            f"Polygon {signal} (l{poly.attrib['layer']}) isolate is {mm_to_thou(i)} which is too small "
             f"for {boardType.name.title()} width ({isolateMinThou} thou)."
         ) for (poly, i) in isolate_fails)
         if correct:

@@ -1,5 +1,6 @@
+Schematic alignment - everything (all wires and corners)
 Check pin ordering?
-Stop property or stop polygon
+-Stop property or stop polygon
 -Minimum trace widths
 Labels near connectors?
 Inductors and polygons
@@ -10,3 +11,4 @@ Good library practices
 Polygons not on top of each other or outline
 Correct layers on/off
 missing frame, frame not 0 aligned
+"TODO" in text
