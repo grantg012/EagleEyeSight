@@ -6,7 +6,6 @@ on for pads & smds or have a polygon on that area
 from __future__ import annotations
 from itertools import chain
 import sys
-from typing import Final
 
 import xml.etree.ElementTree as ET
 
@@ -66,5 +65,5 @@ def main(args: list[str]):
         brdTree.write(brdFile, "utf-8")
 
 
-if (__name__ == "__main__"):
+if(__name__ == "__main__"):
     sys.exit(main(sys.argv[1:]))
